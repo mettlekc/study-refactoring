@@ -23,12 +23,12 @@
 
 ![move-method](move-method-01.png)
 
-##### When
+#### When
 - 클래스 기능이 너무 많을 때
 - 클래스 간 과하게 연동되어 의존성이 지나칠때
 - 메서드를 많이 참조한다고 생각하는 객체 기준으로 진행 여부 결정
 
-##### How
+#### How
 - 원본 메서드에 사용된 모든 기능 검사
 - 원본 클래스의 하위클래스/상위클래스에서 그 메서드에 대한 다른 선언이 있는지 검사
 - 그 메서드를 대상 클래스 안에 선언
@@ -41,7 +41,7 @@
 - 원본 메서드를 삭제할 때는 기존의 참조를 전부 대상 메서드 참조로 수정
 - 컴파일과 테스트 실시
 
-##### Example
+#### Example
 
 ```java
 class Account {
@@ -119,10 +119,111 @@ Step 6. 원본 클래스에 메서드 정의 삭제
 추가. 변수 한개 이상 전달 할 경우, 객체 전체를 전달해야 한다
 
 ### 필드 이동
+#### When
+- 필드가 자신이 속한 클래스보다 다른 클래스에서 더 많이 사용 될때
+- 메서드를 더 많이 참조해서 정보를 이용할 때, 메서드는 현재 위치가 적절하다면 필드만 이동
+- 클래스 추출 시 필드를 우선 옮기고, 메서드를 이동
+
+#### How
+- 필드가 public일 경우 캡슐화 기법 실시 (필드 자체 캡슐화)
+- 컴파일 / 테스트
+- 대상 클래스 안에 읽ㄱ/쓰기 메서드와 함께 필드를 작성
+- 대상 클래스 컴파일
+- 원본 객체에서 대상 객채를 참조할 방법 정하기
+- 원본 클래스에서 필드를 삭제
+- 원본 필드를 참조하는 모든 부분을 대상 클래스에 있는 적절한 메서드를 참조하게 수정
+- 컴파일 / 테스트
+
+#### Example
+
+```java
+class Account {
+    private AccountType _type;
+    private double _interestRate;
+    
+    double interestForAmount_days(double amount, int days) {
+        return _interestRate * amount * days / 365;
+    }
+    
+}
+```
+
+목표. rate 필드를 AccountType 클래스로 이동
+
+Step 1. 필드와 set/get 생성
+```java
+class AccountType {
+    private double _interestRate;
+    
+    void setInterestRate(double arg) {
+        _interestRate = arg;
+    }
+    
+    double getInterestRate() {
+        return _interestRate;
+    }
+}
+```
+
+Step 2. 컴파일 / 테스트
+
+Step 3. 원본 클래스 안의 메서드들을 AccountType 클래스를 사용하도록 참조를 변경, 원본에서 interestRate 필드 삭제
+
+```java
+class Account {
+    double interestForAmount_days(double amount, int days) {
+        return _type.getInterestRate * amount * days / 365;
+    } 
+}
+```
+
+참고. 필드 자체 캡슐화
+```java
+class Account {
+    
+    private double _interestRate;
+    
+    double interestForAmount_days(double amount, int days) {
+        return getInterestRate * amount * days / 365;
+    }
+    
+    private void setInterestRate(double arg) {
+        _interestRate = arg;
+    }
+    
+    private double getInterestRate() {
+        return _interestRate;
+    }
+}
+```
+
 ### 클래스 추출
+#### When
+#### How
+#### Example
+
 ### 클래스 내용 직접 삽입
+#### When
+#### How
+#### Example
+
 ### 대리 객체 은폐
+#### When
+#### How
+#### Example
+
 ### 과잉 중개 메서드 제거
+#### When
+#### How
+#### Example
+
 ### 외래 클래스 메서드 추가
+#### When
+#### How
+#### Example
+
 ### 국소적 상속확장 클래스 사용
+#### When
+#### How
+#### Example
 
