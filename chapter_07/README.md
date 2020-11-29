@@ -21,7 +21,7 @@
 
 ### 메서드 이동
 
-![move-method](https://drive.google.com/file/d/1tlIaZz6mmYfI4BE_GecT4ziebO3Hjnr5/view?usp=sharing)
+![move-method](move-method-01.png)
 
 ##### When
 - 클래스 기능이 너무 많을 때
